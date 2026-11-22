@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Cloudinary\Cloudinary;
 
 class ProductController extends Controller
 {
@@ -41,7 +42,14 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $upload = cloudinary()->uploadApi()->upload(
+                $request->file('image')->getRealPath(),
+                [
+                    'folder' => 'products',
+                ]
+            );
+
+            $validated['image'] = $upload['secure_url'];
         }
 
         $validated['vendor_id'] = Auth::id();
@@ -76,11 +84,14 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
+            $upload = cloudinary()->uploadApi()->upload(
+                $request->file('image')->getRealPath(),
+                [
+                    'folder' => 'products',
+                ]
+            );
 
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $upload['secure_url'];
         }
 
         $product->update($validated);
@@ -93,7 +104,9 @@ class ProductController extends Controller
     {
         $this->authorizeProduct($product);
 
-        if ($product->image) {
+        // Hapus file lokal untuk gambar lama.
+        // Gambar Cloudinary tidak dihapus pada tahap ini.
+        if ($product->image && !str_starts_with($product->image, 'http')) {
             Storage::disk('public')->delete($product->image);
         }
 

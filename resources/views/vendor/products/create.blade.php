@@ -61,9 +61,32 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Foto Produk</label>
-                    <input type="file" name="image" class="form-control" accept="image/*">
-                    @error('image') <small class="text-danger">{{ $message }}</small> @enderror
+                    <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp" onchange="previewImage(event)">
+
+                    <div class="mt-3">
+                        <img id="imagePreview" src="#" alt="Preview Foto" style="display:none; width:150px; height:150px; object-fit:cover; border-radius:10px;">
+                    </div>
+
+                    @error('image')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
+
+                @push('scripts')
+                <script>
+                    function previewImage(event) {
+                        const preview = document.getElementById('imagePreview');
+                        const file = event.target.files[0];
+
+                        if (file) {
+                            preview.src = URL.createObjectURL(file);
+                            preview.style.display = 'block';
+                        } else {
+                            preview.style.display = 'none';
+                        }
+                    }
+                </script>
+                @endpush
 
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Status Produk</label>

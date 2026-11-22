@@ -64,14 +64,34 @@
                     <label class="form-label fw-semibold">Foto Produk</label>
 
                     @if($product->image)
-                        <div class="mb-2">
-                            <img src="{{ asset('storage/'.$product->image) }}"
-                                 width="130" class="rounded">
+                        <div class="mb-3">
+                            <p class="text-muted small mb-2">Foto saat ini:</p>
+
+                            <img
+                                id="currentImage"
+                                src="{{ str_starts_with($product->image, 'http')
+                                    ? $product->image
+                                    : asset('storage/' . $product->image) }}"
+                                alt="{{ $product->name }}"
+                                style="width:130px; height:130px; object-fit:cover; border-radius:10px;">
                         </div>
                     @endif
 
-                    <input type="file" name="image" class="form-control" accept="image/*">
-                    <small class="text-muted">Kosongkan jika tidak ingin mengganti foto.</small>
+                    <input type="file" name="image" class="form-control"
+                           accept="image/jpeg,image/png,image/webp"
+                           onchange="previewImage(event)">
+
+                    <div class="mt-3">
+                        <img id="imagePreview"
+                             src="#"
+                             alt="Preview Foto Baru"
+                             style="display:none; width:130px; height:130px; object-fit:cover; border-radius:10px;">
+                    </div>
+
+                    <small class="text-muted">
+                        Kosongkan jika tidak ingin mengganti foto.
+                    </small>
+
                     @error('image') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
@@ -99,3 +119,19 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function previewImage(event) {
+        const preview = document.getElementById('imagePreview');
+        const file = event.target.files[0];
+
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+</script>
+@endpush

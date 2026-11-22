@@ -150,7 +150,9 @@
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 product-card">
                             @if($product->image)
                                 <img
-                                    src="{{ asset('storage/' . $product->image) }}"
+                                    src="{{ str_starts_with($product->image, 'http')
+                                        ? $product->image
+                                        : asset('storage/' . $product->image) }}"
                                     class="product-image"
                                     alt="{{ $product->name }}">
                             @else

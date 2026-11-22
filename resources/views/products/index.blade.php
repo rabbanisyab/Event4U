@@ -58,9 +58,14 @@
                         <div class="card border-0 shadow-sm h-100 product-card">
 
                             @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}"
-                                     class="card-img-top"
-                                     style="height: 190px; object-fit: cover;">
+                                <img
+                                    src="{{ str_starts_with($product->image, 'http')
+                                        ? $product->image
+                                        : asset('storage/' . $product->image) }}"
+                                    class="card-img-top"
+                                    alt="{{ $product->name }}"
+                                    style="height: 190px; object-fit: cover;"
+                                >
                             @else
                                 <div class="bg-light d-flex align-items-center justify-content-center"
                                      style="height: 190px;">

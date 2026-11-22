@@ -43,7 +43,28 @@
                                 <td>{{ $loop->iteration }}</td>
 
                                 <td>
-                                    <div class="fw-semibold">{{ $product->name }}</div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        @if($product->image)
+                                            <img
+                                                src="{{ str_starts_with($product->image, 'http')
+                                                    ? $product->image
+                                                    : asset('storage/' . $product->image) }}"
+                                                alt="{{ $product->name }}"
+                                                width="55"
+                                                height="55"
+                                                style="object-fit: cover; border-radius: 8px;"
+                                            >
+                                        @else
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                                 style="width: 55px; height: 55px;">
+                                                <i class="bi bi-image text-muted fs-4"></i>
+                                            </div>
+                                        @endif
+
+                                        <div class="fw-semibold">
+                                            {{ $product->name }}
+                                        </div>
+                                    </div>
                                 </td>
 
                                 <td>{{ $product->category->name ?? '-' }}</td>
