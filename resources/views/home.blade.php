@@ -196,20 +196,264 @@
     </div>
 </section>
 
-{{-- TENTANG --}}
+{{-- TENTANG KAMI --}}
 <section class="content-section" id="tentang">
     <div class="container">
-        <div class="about-section bg-primary text-white rounded-4 text-center">
-            <h2 class="fw-bold mb-2">
-                Persiapkan Acaramu Bersama Event 4U!
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <span class="text-primary fw-semibold small">TENTANG KAMI</span>
+                <h2 class="section-title fw-bold mt-2 mb-3">
+                    Mengenal Lebih Dekat Event 4U
+                </h2>
+
+                <p class="text-secondary" style="line-height: 1.9;">
+                    Event 4U merupakan platform penyewaan perlengkapan
+                    event yang menghubungkan penyedia barang dengan
+                    pelanggan dalam satu tempat.
+                </p>
+
+                <p class="text-secondary" style="line-height: 1.9;">
+                    Kami hadir untuk membantu mempermudah proses pencarian
+                    dan penyewaan berbagai kebutuhan acara, mulai dari
+                    dekorasi, sound system, hingga perlengkapan lainnya.
+                </p>
+
+                <p class="text-secondary" style="line-height: 1.9;">
+                    Dengan Event 4U, pelanggan dapat menemukan produk,
+                    melihat informasi harga dan stok, serta melakukan
+                    pemesanan secara online dengan lebih praktis.
+                </p>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="about-highlight rounded-4 p-4 p-md-5">
+                    <div class="about-icon mb-3">
+                        <i class="bi bi-calendar2-event"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">
+                        Semua Kebutuhan Event dalam Satu Platform
+                    </h4>
+                    <p class="text-secondary mb-0">
+                        Kami ingin membuat persiapan acara menjadi
+                        lebih mudah dengan menyediakan akses ke berbagai
+                        pilihan perlengkapan event secara online.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {{-- KEUNGGULAN --}}
+        <div class="row g-3 mt-4">
+            <div class="col-md-4">
+                <div class="feature-card h-100">
+                    <i class="bi bi-search text-primary"></i>
+                    <h6 class="fw-bold mt-3">Mudah Dicari</h6>
+                    <p class="text-secondary small mb-0">
+                        Temukan berbagai perlengkapan event berdasarkan
+                        kategori dan kebutuhan acara.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card h-100">
+                    <i class="bi bi-clock text-primary"></i>
+                    <h6 class="fw-bold mt-3">Lebih Praktis</h6>
+                    <p class="text-secondary small mb-0">
+                        Cari produk dan lakukan pemesanan melalui
+                        satu platform secara online.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card h-100">
+                    <i class="bi bi-box-seam text-primary"></i>
+                    <h6 class="fw-bold mt-3">Pilihan Beragam</h6>
+                    <p class="text-secondary small mb-0">
+                        Berbagai kebutuhan acara tersedia dari
+                        vendor yang tergabung di Event 4U.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- CARA KERJA --}}
+<section class="content-section bg-white" id="cara-kerja">
+    <div class="container">
+        <div class="section-heading text-center">
+            <span class="text-primary fw-semibold small">CARA KERJA</span>
+            <h2 class="section-title fw-bold mt-1">
+                Sewa Perlengkapan dengan Mudah
             </h2>
-            <p class="mb-3">
-                Semua kebutuhan event, lebih mudah dalam satu platform.
+            <p class="text-secondary">
+                Ikuti beberapa langkah sederhana untuk memesan perlengkapan event.
             </p>
-            <a href="{{ route('register') }}"
-               class="btn btn-light text-primary rounded-pill px-4 py-2 fw-semibold">
-                Mulai Sekarang
-            </a>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-6 col-lg-3">
+                <div class="step-card text-center h-100">
+                    <div class="step-number">01</div>
+                    <i class="bi bi-search"></i>
+                    <h6 class="fw-bold mt-3">Cari Produk</h6>
+                    <p class="text-secondary small mb-0">
+                        Pilih perlengkapan sesuai kebutuhan acaramu.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="step-card text-center h-100">
+                    <div class="step-number">02</div>
+                    <i class="bi bi-cart-plus"></i>
+                    <h6 class="fw-bold mt-3">Buat Pesanan</h6>
+                    <p class="text-secondary small mb-0">
+                        Masukkan produk ke keranjang dan tentukan tanggal sewa.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="step-card text-center h-100">
+                    <div class="step-number">03</div>
+                    <i class="bi bi-credit-card"></i>
+                    <h6 class="fw-bold mt-3">Lakukan Pembayaran</h6>
+                    <p class="text-secondary small mb-0">
+                        Selesaikan pembayaran sesuai instruksi yang tersedia.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="step-card text-center h-100">
+                    <div class="step-number">04</div>
+                    <i class="bi bi-check-circle"></i>
+                    <h6 class="fw-bold mt-3">Pesanan Diproses</h6>
+                    <p class="text-secondary small mb-0">
+                        Pantau status pesanan hingga proses penyewaan selesai.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- KONTAK --}}
+<section class="content-section" id="kontak">
+    <div class="container">
+        <div class="section-heading">
+            <span class="text-primary fw-semibold small">HUBUNGI KAMI</span>
+            <h2 class="section-title fw-bold mt-1">
+                Ada Pertanyaan?
+            </h2>
+            <p class="text-secondary">
+                Jangan ragu untuk menghubungi tim Event 4U jika membutuhkan bantuan.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="contact-info-card h-100">
+                    <h5 class="fw-bold mb-3">Kontak Event 4U</h5>
+
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="contact-icon">
+                            <i class="bi bi-whatsapp"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-semibold mb-1">WhatsApp</h6>
+                            <p class="text-secondary small mb-0">
+                                Hubungi admin untuk pertanyaan dan bantuan.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="contact-icon">
+                            <i class="bi bi-globe"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-semibold mb-1">Layanan Online</h6>
+                            <p class="text-secondary small mb-0">
+                                Event 4U dapat diakses secara online
+                                tanpa perlu datang ke kantor fisik.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <div class="contact-icon">
+                            <i class="bi bi-chat-dots"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-semibold mb-1">Pusat Bantuan</h6>
+                            <p class="text-secondary small mb-0">
+                                Sampaikan pertanyaan atau kendala
+                                terkait penyewaan perlengkapan event.
+                            </p>
+                        </div>
+                    </div>
+
+                    <a href="https://wa.me/628xxxxxxxxxx"
+                       target="_blank"
+                       class="btn btn-success mt-4 w-100">
+                        <i class="bi bi-whatsapp me-2"></i>
+                        Hubungi via WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="contact-form-card">
+                    <h5 class="fw-bold mb-1">Kirim Pertanyaan</h5>
+                    <p class="text-secondary small mb-4">
+                        Isi formulir berikut untuk mengirim pesan ke admin.
+                    </p>
+
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">
+                                Nama
+                            </label>
+                            <input type="text"
+                                   id="contactName"
+                                   class="form-control"
+                                   placeholder="Masukkan nama kamu"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">
+                                Email
+                            </label>
+                            <input type="email"
+                                   id="contactEmail"
+                                   class="form-control"
+                                   placeholder="nama@email.com"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">
+                                Pesan
+                            </label>
+                            <textarea id="contactMessage"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Tuliskan pertanyaan kamu..."
+                                      required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-send me-2"></i>
+                            Kirim Pertanyaan
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -218,28 +462,41 @@
 <footer class="footer mt-4">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-6">
-                <h5 class="fw-bold text-white">Event4U.</h5>
+            <div class="col-md-5">
+                <h5 class="fw-bold text-white">Event 4U<span class="text-primary">.</span></h5>
                 <p class="mt-2">
-                    Platform penyewaan perlengkapan event
-                    yang membantu mempermudah persiapan acara.
+                    Platform penyewaan perlengkapan event yang
+                    membantu menghubungkan pelanggan dengan vendor
+                    untuk memenuhi kebutuhan acara.
                 </p>
             </div>
 
             <div class="col-md-3">
-                <h6 class="fw-bold text-white">Navigasi</h6>
-                <p><a href="#kategori" class="text-decoration-none text-secondary">Kategori</a></p>
-                <p><a href="#produk" class="text-decoration-none text-secondary">Produk</a></p>
-                <p><a href="#tentang" class="text-decoration-none text-secondary">Tentang Kami</a></p>
+                <h6 class="fw-bold text-white mb-3">Navigasi</h6>
+                <p><a href="#kategori" class="footer-link">Kategori</a></p>
+                <p><a href="#produk" class="footer-link">Katalog Produk</a></p>
+                <p><a href="#tentang" class="footer-link">Tentang Kami</a></p>
+                <p><a href="#cara-kerja" class="footer-link">Cara Kerja</a></p>
+                <p><a href="#kontak" class="footer-link">Kontak</a></p>
             </div>
 
-            <div class="col-md-3">
-                <h6 class="fw-bold text-white">Event 4U</h6>
-                <p>Solusi kebutuhan perlengkapan event.</p>
+            <div class="col-md-4">
+                <h6 class="fw-bold text-white mb-3">Hubungi Kami</h6>
+                <p>
+                    <i class="bi bi-globe me-2"></i>
+                    Platform penyewaan online
+                </p>
+                <p>
+                    <i class="bi bi-whatsapp me-2"></i>
+                    WhatsApp Admin Event 4U
+                </p>
+                <a href="#kontak" class="footer-link">
+                    Hubungi tim kami
+                </a>
             </div>
         </div>
 
-        <hr class="border-secondary">
+        <hr class="border-secondary mt-4">
 
         <div class="text-center small">
             © {{ date('Y') }} Event 4U. All Rights Reserved.
@@ -379,6 +636,95 @@
         margin-bottom: 9px;
     }
 
+    html {
+        scroll-behavior: smooth;
+    }
+
+    #tentang,
+    #cara-kerja,
+    #kontak {
+        scroll-margin-top: 90px;
+    }
+
+    .about-highlight,
+    .contact-info-card,
+    .contact-form-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 25px;
+    }
+
+    .about-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 14px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+    }
+
+    .feature-card,
+    .step-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 15px;
+        padding: 23px;
+    }
+
+    .feature-card > i,
+    .step-card > i {
+        font-size: 27px;
+    }
+
+    .step-number {
+        color: #2563eb;
+        font-weight: 800;
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .contact-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+    }
+
+    .contact-form-card .form-control {
+        font-size: 13px;
+        padding: 11px 13px;
+        border-radius: 8px;
+    }
+
+    .footer-link {
+        color: #adb5bd;
+        text-decoration: none;
+    }
+
+    .footer-link:hover {
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .about-highlight,
+        .contact-info-card,
+        .contact-form-card,
+        .feature-card,
+        .step-card {
+            padding: 18px;
+        }
+    }
+
     @media (max-width: 768px) {
         .hero-section {
             padding: 30px 0 20px;
@@ -409,4 +755,33 @@
         }
     }
 </style>
+@endpush
+
+
+@push('scripts')
+<script>
+    document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // GANTI dengan nomor WhatsApp kamu.
+        // Gunakan kode negara 62, tanpa tanda + atau spasi.
+        const whatsapp = '628xxxxxxxxxx';
+
+        const nama = document.getElementById('contactName').value;
+        const email = document.getElementById('contactEmail').value;
+        const pesan = document.getElementById('contactMessage').value;
+
+        const text = `Halo Admin Event 4U!
+
+Nama: ${nama}
+Email: ${email}
+
+Pertanyaan:
+${pesan}`;
+
+        const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`;
+
+        window.open(url, '_blank');
+    });
+</script>
 @endpush

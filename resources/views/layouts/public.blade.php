@@ -20,6 +20,16 @@
             --dark: #0f172a;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
+        #tentang,
+        #cara-kerja,
+        #kontak {
+            scroll-margin-top: 85px;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: #f8fafc;
@@ -134,24 +144,29 @@
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
 
                 {{-- MENU UMUM --}}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">
-                        Beranda
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}">
+                            Beranda
+                        </a>
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('products.index') }}">
-                        Katalog
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('products.index') }}">
+                            Katalog
+                        </a>
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}#tentang">
-                        Tentang Kami
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}#tentang">
+                            Tentang Kami
+                        </a>
+                    </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}#kontak">
+                            Kontak
+                        </a>
+                    </li>
                 @auth
 
                     {{-- MENU CUSTOMER --}}

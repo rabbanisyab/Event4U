@@ -79,4 +79,7 @@ Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->
 
 Route::post('/midtrans/notification', [PaymentController::class,'notification'])->name('midtrans.notification');
 
+Route::view('/tentang-kami', 'pages.about')->name('about');
+Route::view('/kontak', 'pages.contact')->name('contact');
+
 require __DIR__.'/auth.php';
