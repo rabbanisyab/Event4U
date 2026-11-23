@@ -59,6 +59,7 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
         
     Route::get('/orders', [\App\Http\Controllers\Vendor\OrderController::class, 'index'])->name('orders.index');
     Route::patch('/orders/{bookingDetail}/status', [\App\Http\Controllers\Vendor\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::get('/orders/history', [OrderController::class, 'history'])->name('orders.history');
 });
 
 Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->group(function () {

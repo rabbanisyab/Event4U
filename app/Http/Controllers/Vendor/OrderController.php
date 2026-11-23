@@ -12,6 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
+    // PESANAN MASUK
     public function index()
     {
         $vendorId = Auth::id();
@@ -19,20 +20,67 @@ class OrderController extends Controller
         $bookings = Booking::with([
             'user',
             'details' => function ($query) use ($vendorId) {
-                $query->whereHas('product', function ($productQuery) use ($vendorId) {
+                $query->whereIn('vendor_status', [
+                    'pending',
+                    'confirmed',
+                    'ongoing'
+                ])
+                ->whereHas('product', function ($productQuery) use ($vendorId) {
                     $productQuery->where('vendor_id', $vendorId);
-                })->with('product.category');
+                })
+                ->with('product.category');
             }
         ])
-        ->whereHas('details.product', function ($query) use ($vendorId) {
-            $query->where('vendor_id', $vendorId);
+        ->whereHas('details', function ($query) use ($vendorId) {
+            $query->whereIn('vendor_status', [
+                'pending',
+                'confirmed',
+                'ongoing'
+            ])
+            ->whereHas('product', function ($productQuery) use ($vendorId) {
+                $productQuery->where('vendor_id', $vendorId);
+            });
         })
         ->latest()
-        ->get();
+        ->paginate(10);
 
         return view('vendor.orders.index', compact('bookings'));
     }
 
+    // RIWAYAT PESANAN
+    public function history()
+    {
+        $vendorId = Auth::id();
+
+        $bookings = Booking::with([
+            'user',
+            'details' => function ($query) use ($vendorId) {
+                $query->whereIn('vendor_status', [
+                    'completed',
+                    'rejected'
+                ])
+                ->whereHas('product', function ($productQuery) use ($vendorId) {
+                    $productQuery->where('vendor_id', $vendorId);
+                })
+                ->with('product.category');
+            }
+        ])
+        ->whereHas('details', function ($query) use ($vendorId) {
+            $query->whereIn('vendor_status', [
+                'completed',
+                'rejected'
+            ])
+            ->whereHas('product', function ($productQuery) use ($vendorId) {
+                $productQuery->where('vendor_id', $vendorId);
+            });
+        })
+        ->latest()
+        ->paginate(10);
+
+        return view('vendor.orders.history', compact('bookings'));
+    }
+
+    // UPDATE STATUS PESANAN
     public function updateStatus(Request $request, BookingDetail $bookingDetail)
     {
         $validated = $request->validate([
@@ -45,6 +93,7 @@ class OrderController extends Controller
                 ->lockForUpdate()
                 ->findOrFail($bookingDetail->id);
 
+            // Pastikan produk milik vendor yang sedang login
             abort_unless(
                 $detail->product &&
                 (int) $detail->product->vendor_id === (int) Auth::id(),
@@ -54,26 +103,38 @@ class OrderController extends Controller
             $oldStatus = $detail->vendor_status;
             $newStatus = $validated['vendor_status'];
 
-            if (in_array($oldStatus, ['completed', 'rejected'])) {
+            // Validasi alur perubahan status
+            $allowedTransitions = [
+                'pending' => ['confirmed', 'rejected'],
+                'confirmed' => ['ongoing'],
+                'ongoing' => ['completed'],
+            ];
+
+            if (!in_array(
+                $newStatus,
+                $allowedTransitions[$oldStatus] ?? []
+            )) {
                 throw ValidationException::withMessages([
-                    'vendor_status' => 'Pesanan ini sudah selesai diproses.',
+                    'vendor_status' => 'Perubahan status pesanan tidak diperbolehkan.',
                 ]);
             }
 
+            // Update status detail
             $detail->vendor_status = $newStatus;
 
-            // Kembalikan stok jika pesanan selesai atau ditolak.
+            // Kembalikan stok hanya sekali ketika ditolak atau selesai
             if (
                 in_array($newStatus, ['completed', 'rejected']) &&
                 !$detail->stock_restored_at
             ) {
                 $detail->product->increment('stock', $detail->quantity);
+
                 $detail->stock_restored_at = now();
             }
 
             $detail->save();
 
-            // Ambil semua detail dalam satu booking.
+            // Sinkronisasi status booking utama
             $booking = Booking::whereKey($detail->booking_id)
                 ->lockForUpdate()
                 ->firstOrFail();
@@ -82,28 +143,35 @@ class OrderController extends Controller
                 ->lockForUpdate()
                 ->get();
 
-            $statuses = $allDetails->pluck('vendor_status');
+            $terminalStatuses = ['completed', 'rejected'];
 
-            // Tentukan status booking utama.
-            if ($statuses->every(fn ($status) => $status === 'rejected')) {
-
-                $booking->update(['status' => 'cancelled']);
-
-            } elseif ($statuses->every(
-                fn ($status) => in_array($status, ['completed', 'rejected'])
+            // Semua detail sudah selesai diproses
+            if ($allDetails->every(
+                fn ($item) => in_array($item->vendor_status, $terminalStatuses)
             )) {
+                $allRejected = $allDetails->every(
+                    fn ($item) => $item->vendor_status === 'rejected'
+                );
 
-                $booking->update(['status' => 'completed']);
-
-            } elseif ($statuses->contains('ongoing')) {
-
+                $booking->update([
+                    'status' => $allRejected ? 'cancelled' : 'completed',
+                ]);
+            }
+            // Ada detail yang sedang berjalan
+            elseif ($allDetails->contains(
+                fn ($item) => $item->vendor_status === 'ongoing'
+            )) {
                 $booking->update(['status' => 'ongoing']);
-
-            } elseif ($statuses->every(
-                fn ($status) => in_array($status, ['confirmed', 'rejected'])
-            ) && $statuses->contains('confirmed')) {
-
+            }
+            // Ada detail yang sudah dikonfirmasi
+            elseif ($allDetails->contains(
+                fn ($item) => $item->vendor_status === 'confirmed'
+            )) {
                 $booking->update(['status' => 'confirmed']);
+            }
+            // Sisanya masih menunggu
+            else {
+                $booking->update(['status' => 'pending']);
             }
         });
 

@@ -155,6 +155,7 @@
             ['label' => 'Dashboard', 'icon' => 'bi-grid', 'route' => 'vendor.dashboard'],
             ['label' => 'Produk Saya', 'icon' => 'bi-box-seam', 'route' => 'vendor.products.index'],
             ['label' => 'Pesanan Masuk', 'icon' => 'bi-receipt', 'route' => 'vendor.orders.index'],
+            ['label' => 'Riwayat Pesanan', 'icon' => 'bi-clock-history', 'route' => 'vendor.orders.history'],
         ];
         } else {
         $menus = [
