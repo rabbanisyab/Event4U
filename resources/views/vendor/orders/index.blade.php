@@ -67,37 +67,6 @@
         </div>
     @endif
 
-    {{-- RINGKASAN STATUS --}}
-    <div class="row g-3 mb-4">
-        @php
-            $summaryCards = [
-                ['label' => 'Menunggu', 'value' => $statusCounts['pending'], 'icon' => 'bi-clock', 'color' => 'warning'],
-                ['label' => 'Dikonfirmasi', 'value' => $statusCounts['confirmed'], 'icon' => 'bi-check-circle', 'color' => 'primary'],
-                ['label' => 'Berjalan', 'value' => $statusCounts['ongoing'], 'icon' => 'bi-arrow-repeat', 'color' => 'info'],
-                ['label' => 'Selesai', 'value' => $statusCounts['completed'], 'icon' => 'bi-check-circle-fill', 'color' => 'success'],
-                ['label' => 'Ditolak', 'value' => $statusCounts['rejected'], 'icon' => 'bi-x-circle', 'color' => 'danger'],
-            ];
-        @endphp
-
-        @foreach($summaryCards as $card)
-            <div class="col-6 col-md-4 col-xl">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex align-items-center justify-content-between gap-2">
-                            <div>
-                                <p class="text-muted small mb-1">{{ $card['label'] }}</p>
-                                <h4 class="fw-bold mb-0">{{ $card['value'] }}</h4>
-                            </div>
-                            <div class="summary-icon text-{{ $card['color'] }} bg-{{ $card['color'] }}-subtle">
-                                <i class="bi {{ $card['icon'] }}"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
-
     {{-- DAFTAR PESANAN --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
