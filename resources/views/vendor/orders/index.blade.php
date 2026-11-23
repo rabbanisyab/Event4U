@@ -67,6 +67,31 @@
         </div>
     @endif
 
+    {{-- FILTER STATUS --}}
+    @php
+        $filters = [
+            'all' => 'Semua Pesanan',
+            'pending' => 'Menunggu',
+            'confirmed' => 'Dikonfirmasi',
+            'ongoing' => 'Berjalan',
+        ];
+    @endphp
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-3">
+            <div class="fw-semibold mb-3">Filter Status Pesanan</div>
+
+            <div class="d-flex flex-wrap gap-2">
+                @foreach($filters as $key => $label)
+                    <a href="{{ route('vendor.orders.index', ['status' => $key]) }}"
+                    class="btn btn-sm rounded-pill px-3 {{ $selectedStatus === $key ? 'btn-primary' : 'btn-outline-secondary' }}">
+                        {{ $label }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
     {{-- DAFTAR PESANAN --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
