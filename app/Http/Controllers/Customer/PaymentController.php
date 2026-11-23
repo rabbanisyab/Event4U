@@ -69,8 +69,18 @@ class PaymentController extends Controller
             return view('customer.payment.index', compact('booking', 'snap'));
 
         } catch (\Exception $e) {
+
+            \Illuminate\Support\Facades\Log::error(
+                'Midtrans Payment Error',
+                [
+                    'booking_id' => $booking->id,
+                    'booking_code' => $booking->booking_code,
+                    'message' => $e->getMessage(),
+                ]
+            );
+
             return redirect()->route('customer.orders.index')
-                ->with('error', 'Gagal membuat pembayaran: ' . $e->getMessage());
+                ->with('error', 'Gagal membuat pembayaran. Silakan coba lagi.');
         }
     }
 

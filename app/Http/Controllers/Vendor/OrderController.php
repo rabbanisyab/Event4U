@@ -8,6 +8,7 @@ use App\Models\BookingDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
@@ -53,29 +54,53 @@ class OrderController extends Controller
             $oldStatus = $detail->vendor_status;
             $newStatus = $validated['vendor_status'];
 
-            // Status selesai atau ditolak tidak boleh diproses ulang.
             if (in_array($oldStatus, ['completed', 'rejected'])) {
-                throw \Illuminate\Validation\ValidationException::withMessages([
+                throw ValidationException::withMessages([
                     'vendor_status' => 'Pesanan ini sudah selesai diproses.',
                 ]);
             }
 
             $detail->vendor_status = $newStatus;
 
-            // Kembalikan stok ketika barang selesai disewa
-            // atau pesanan ditolak.
             if (
                 in_array($newStatus, ['completed', 'rejected']) &&
                 !$detail->stock_restored_at
             ) {
-                $product = $detail->product;
-
-                $product->increment('stock', $detail->quantity);
-
+                $detail->product->increment('stock', $detail->quantity);
                 $detail->stock_restored_at = now();
             }
 
             $detail->save();
+
+            // Sinkronisasi status pesanan utama.
+            $booking = Booking::whereKey($detail->booking_id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $allDetails = BookingDetail::where('booking_id', $booking->id)
+                ->lockForUpdate()
+                ->get();
+
+            $terminalStatuses = ['completed', 'rejected'];
+
+            // Jika seluruh detail sudah selesai diproses.
+            if ($allDetails->every(
+                fn ($item) => in_array($item->vendor_status, $terminalStatuses)
+            )) {
+                $allRejected = $allDetails->every(
+                    fn ($item) => $item->vendor_status === 'rejected'
+                );
+
+                $booking->update([
+                    'status' => $allRejected ? 'cancelled' : 'completed',
+                ]);
+            } elseif ($allDetails->contains(
+                fn ($item) => $item->vendor_status === 'ongoing'
+            )) {
+                $booking->update([
+                    'status' => 'ongoing',
+                ]);
+            }
         });
 
         return redirect()->route('vendor.orders.index')

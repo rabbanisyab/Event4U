@@ -59,6 +59,7 @@
 
 @endsection
 
+
 @push('scripts')
 <script
     src="{{ config('midtrans.is_production')
@@ -68,8 +69,26 @@
 </script>
 
 <script>
-    document.getElementById('pay-button').addEventListener('click', function () {
-        snap.pay(@json($snap->token), {
+document.addEventListener('DOMContentLoaded', function () {
+    const payButton = document.getElementById('pay-button');
+
+    payButton.addEventListener('click', function () {
+
+        if (typeof window.snap === 'undefined') {
+            alert('Midtrans Snap gagal dimuat. Periksa koneksi dan Client Key.');
+            console.error('Midtrans Snap.js tidak ditemukan.');
+            return;
+        }
+
+        const snapToken = @json($snap->token);
+
+        if (!snapToken) {
+            alert('Snap Token kosong. Silakan coba kembali.');
+            console.error('Snap Token:', snapToken);
+            return;
+        }
+
+        window.snap.pay(snapToken, {
             onSuccess: function(result) {
                 window.location.href = "{{ route('customer.payment.success', $booking->id) }}";
             },
@@ -77,6 +96,7 @@
                 window.location.href = "{{ route('customer.orders.index') }}";
             },
             onError: function(result) {
+                console.error('Midtrans Error:', result);
                 alert('Pembayaran gagal. Silakan coba kembali.');
             },
             onClose: function() {
@@ -84,5 +104,6 @@
             }
         });
     });
+});
 </script>
 @endpush
