@@ -54,37 +54,46 @@ class OrderController extends Controller
         ));
     }
 
-    // RIWAYAT PESANAN
     public function history()
     {
         $vendorId = Auth::id();
 
+        $selectedStatus = request()->query('status', 'all');
+
+        $allowedStatuses = ['all', 'completed', 'rejected'];
+
+        if (!in_array($selectedStatus, $allowedStatuses)) {
+            $selectedStatus = 'all';
+        }
+
+        $statuses = $selectedStatus === 'all'
+            ? ['completed', 'rejected']
+            : [$selectedStatus];
+
         $bookings = Booking::with([
             'user',
-            'details' => function ($query) use ($vendorId) {
-                $query->whereIn('vendor_status', [
-                    'completed',
-                    'rejected'
-                ])
-                ->whereHas('product', function ($productQuery) use ($vendorId) {
-                    $productQuery->where('vendor_id', $vendorId);
-                })
-                ->with('product.category');
+            'details' => function ($query) use ($vendorId, $statuses) {
+                $query->whereIn('vendor_status', $statuses)
+                    ->whereHas('product', function ($productQuery) use ($vendorId) {
+                        $productQuery->where('vendor_id', $vendorId);
+                    })
+                    ->with('product.category');
             }
         ])
-        ->whereHas('details', function ($query) use ($vendorId) {
-            $query->whereIn('vendor_status', [
-                'completed',
-                'rejected'
-            ])
-            ->whereHas('product', function ($productQuery) use ($vendorId) {
-                $productQuery->where('vendor_id', $vendorId);
-            });
+        ->whereHas('details', function ($query) use ($vendorId, $statuses) {
+            $query->whereIn('vendor_status', $statuses)
+                ->whereHas('product', function ($productQuery) use ($vendorId) {
+                    $productQuery->where('vendor_id', $vendorId);
+                });
         })
         ->latest()
-        ->paginate(10);
+        ->paginate(10)
+        ->withQueryString();
 
-        return view('vendor.orders.history', compact('bookings'));
+        return view('vendor.orders.history', compact(
+            'bookings',
+            'selectedStatus'
+        ));
     }
 
     // UPDATE STATUS PESANAN
