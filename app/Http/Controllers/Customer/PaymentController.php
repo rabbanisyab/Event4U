@@ -105,6 +105,10 @@ class PaymentController extends Controller
         );
 
         if (!hash_equals($expectedSignature, $signatureKey)) {
+            \Log::error('MIDTRANS INVALID SIGNATURE', [
+                'order_id' => $orderId,
+            ]);
+            
             return response()->json([
                 'message' => 'Invalid signature'
             ], 403);
