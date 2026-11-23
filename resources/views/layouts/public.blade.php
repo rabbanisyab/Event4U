@@ -65,10 +65,13 @@
             transition: all 0.2s ease;
         }
 
-        .navbar .nav-link:hover,
         .navbar .nav-link.active {
             color: #2563eb !important;
             font-weight: 600;
+        }
+
+        .navbar .nav-link:hover {
+            color: #2563eb !important;
         }
 
         .navbar .btn {

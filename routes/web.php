@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\PaymentController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 
 Route::get('/', function (Request $request) {
     $products = Product::with('category')
@@ -47,6 +48,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
     Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
+
+    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
 });
 
 Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(function () {
