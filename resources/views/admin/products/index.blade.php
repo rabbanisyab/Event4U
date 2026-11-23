@@ -44,9 +44,13 @@
                         <td>
                             <div class="d-flex align-items-center gap-2">
                                 @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}"
-                                         width="50" height="50"
-                                         class="rounded object-fit-cover">
+                                    <img src="{{ \Illuminate\Support\Str::startsWith($product->image, ['http://', 'https://'])
+                                        ? $product->image
+                                        : asset('storage/' . $product->image) }}"
+                                        width="50"
+                                        height="50"
+                                        class="rounded object-fit-cover"
+                                        style="object-fit: cover;">
                                 @else
                                     <div class="bg-light rounded d-flex align-items-center justify-content-center"
                                          style="width:50px;height:50px">

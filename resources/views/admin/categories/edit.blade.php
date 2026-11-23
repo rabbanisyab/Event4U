@@ -38,9 +38,13 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold">Gambar Saat Ini</label><br>
                 @if($category->image)
-                    <img src="{{ asset('storage/' . $category->image) }}"
-                         width="120" height="120"
-                         class="rounded object-fit-cover mb-2">
+                    <img src="{{ \Illuminate\Support\Str::startsWith($category->image, ['http://', 'https://'])
+                        ? $category->image
+                        : asset('storage/' . $category->image) }}"
+                        width="55"
+                        height="55"
+                        class="rounded object-fit-cover"
+                        style="object-fit: cover;">
                 @else
                     <p class="text-muted">Belum ada gambar.</p>
                 @endif
