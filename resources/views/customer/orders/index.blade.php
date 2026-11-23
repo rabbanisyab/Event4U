@@ -17,25 +17,27 @@
         @php
             $paymentStatus = $booking->payment->status ?? 'pending';
 
-            if ($paymentStatus === 'pending') {
-                $statusLabel = 'Menunggu Pembayaran';
-                $statusColor = 'warning';
-            } elseif ($paymentStatus === 'rejected') {
-                $statusLabel = 'Pembayaran Ditolak';
-                $statusColor = 'danger';
-            } else {
-                $statusLabel = [
-                    'pending' => 'Menunggu Konfirmasi',
-                    'confirmed' => 'Dikonfirmasi',
-                    'ongoing' => 'Sedang Disewa',
-                ][$booking->status] ?? ucfirst($booking->status);
+            $statusLabel = [
+                'pending' => 'Menunggu Konfirmasi',
+                'confirmed' => 'Dikonfirmasi',
+                'ongoing' => 'Sedang Berlangsung',
+                'completed' => 'Selesai',
+                'cancelled' => 'Dibatalkan',
+            ][$booking->status] ?? ucfirst($booking->status);
 
-                $statusColor = [
-                    'pending' => 'primary',
-                    'confirmed' => 'success',
-                    'ongoing' => 'info',
-                ][$booking->status] ?? 'secondary';
-            }
+            $statusColor = [
+                'pending' => 'warning',
+                'confirmed' => 'success',
+                'ongoing' => 'info',
+                'completed' => 'success',
+                'cancelled' => 'danger',
+            ][$booking->status] ?? 'secondary';
+
+            $paymentLabel = [
+                'pending' => 'Menunggu Pembayaran',
+                'verified' => 'Berhasil Dibayar',
+                'rejected' => 'Pembayaran Ditolak',
+            ][$paymentStatus] ?? ucfirst($paymentStatus);
         @endphp
 
         <div class="card border-0 shadow-sm rounded-4 mb-3">
@@ -99,20 +101,20 @@
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <small class="text-secondary">
                         Pembayaran:
-                        <span class="fw-semibold">
-                            {{ ucfirst($paymentStatus) }}
+                        <span class="fw-semibold
+                            {{ $paymentStatus === 'verified' ? 'text-success' : '' }}
+                            {{ $paymentStatus === 'rejected' ? 'text-danger' : '' }}">
+                            {{ $paymentLabel }}
                         </span>
                     </small>
 
-                    <div class="d-flex gap-2">
-                        @if($booking->payment && $booking->payment->status === 'pending')
-                            <a href="{{ route('customer.payment.pay', $booking->id) }}"
-                            class="btn btn-primary btn-sm">
-                                <i class="bi bi-credit-card me-1"></i>
-                                Bayar Sekarang
-                            </a>
-                        @endif
-                    </div>
+                    @if($paymentStatus === 'pending')
+                        <a href="{{ route('customer.payment.pay', $booking->id) }}"
+                        class="btn btn-primary btn-sm">
+                            <i class="bi bi-credit-card me-1"></i>
+                            Bayar Sekarang
+                        </a>
+                    @endif
                 </div>
 
             </div>

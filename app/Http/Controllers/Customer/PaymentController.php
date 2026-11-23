@@ -126,10 +126,6 @@ class PaymentController extends Controller
             $payment->update([
                 'status' => 'verified'
             ]);
-
-            $payment->booking->update([
-                'status' => 'confirmed'
-            ]);
         } elseif (
             in_array($transactionStatus, ['deny', 'cancel', 'expire'])
         ) {

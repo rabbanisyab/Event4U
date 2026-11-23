@@ -62,6 +62,7 @@ class OrderController extends Controller
 
             $detail->vendor_status = $newStatus;
 
+            // Kembalikan stok jika pesanan selesai atau ditolak.
             if (
                 in_array($newStatus, ['completed', 'rejected']) &&
                 !$detail->stock_restored_at
@@ -72,7 +73,7 @@ class OrderController extends Controller
 
             $detail->save();
 
-            // Sinkronisasi status pesanan utama.
+            // Ambil semua detail dalam satu booking.
             $booking = Booking::whereKey($detail->booking_id)
                 ->lockForUpdate()
                 ->firstOrFail();
@@ -81,25 +82,28 @@ class OrderController extends Controller
                 ->lockForUpdate()
                 ->get();
 
-            $terminalStatuses = ['completed', 'rejected'];
+            $statuses = $allDetails->pluck('vendor_status');
 
-            // Jika seluruh detail sudah selesai diproses.
-            if ($allDetails->every(
-                fn ($item) => in_array($item->vendor_status, $terminalStatuses)
-            )) {
-                $allRejected = $allDetails->every(
-                    fn ($item) => $item->vendor_status === 'rejected'
-                );
+            // Tentukan status booking utama.
+            if ($statuses->every(fn ($status) => $status === 'rejected')) {
 
-                $booking->update([
-                    'status' => $allRejected ? 'cancelled' : 'completed',
-                ]);
-            } elseif ($allDetails->contains(
-                fn ($item) => $item->vendor_status === 'ongoing'
+                $booking->update(['status' => 'cancelled']);
+
+            } elseif ($statuses->every(
+                fn ($status) => in_array($status, ['completed', 'rejected'])
             )) {
-                $booking->update([
-                    'status' => 'ongoing',
-                ]);
+
+                $booking->update(['status' => 'completed']);
+
+            } elseif ($statuses->contains('ongoing')) {
+
+                $booking->update(['status' => 'ongoing']);
+
+            } elseif ($statuses->every(
+                fn ($status) => in_array($status, ['confirmed', 'rejected'])
+            ) && $statuses->contains('confirmed')) {
+
+                $booking->update(['status' => 'confirmed']);
             }
         });
 
