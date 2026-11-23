@@ -136,6 +136,7 @@
             ['label' => 'Pengguna', 'icon' => 'bi-people', 'route' => 'admin.users.index'],
             ['label' => 'Kategori', 'icon' => 'bi-tags', 'route' => 'admin.categories.index'],
             ['label' => 'Produk', 'icon' => 'bi-box-seam', 'route' => 'admin.products.index'],
+            ['label' => 'Pesanan', 'icon' => 'bi-receipt', 'route' => 'admin.bookings.index'],
         ];
     } elseif ($role === 'vendor') {
         $menus = [
