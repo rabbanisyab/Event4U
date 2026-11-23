@@ -763,9 +763,7 @@
     document.getElementById('contactForm')?.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // GANTI dengan nomor WhatsApp kamu.
-        // Gunakan kode negara 62, tanpa tanda + atau spasi.
-        const whatsapp = '628xxxxxxxxxx';
+        const whatsapp = '6285715277610';
 
         const nama = document.getElementById('contactName').value;
         const email = document.getElementById('contactEmail').value;
@@ -773,11 +771,11 @@
 
         const text = `Halo Admin Event 4U!
 
-Nama: ${nama}
-Email: ${email}
+        Nama: ${nama}
+        Email: ${email}
 
-Pertanyaan:
-${pesan}`;
+        Pertanyaan:
+        ${pesan}`;
 
         const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`;
 
