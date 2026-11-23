@@ -41,9 +41,13 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($category->image)
-                                <img src="{{ asset('storage/' . $category->image) }}"
-                                     width="55" height="55"
-                                     class="rounded object-fit-cover">
+                                <img src="{{ \Illuminate\Support\Str::startsWith($category->image, ['http://', 'https://'])
+                                    ? $category->image
+                                    : asset('storage/' . $category->image) }}"
+                                    width="55"
+                                    height="55"
+                                    class="rounded object-fit-cover"
+                                    style="object-fit: cover;">
                             @else
                                 <div class="bg-light rounded d-flex align-items-center justify-content-center"
                                      style="width:55px;height:55px">
