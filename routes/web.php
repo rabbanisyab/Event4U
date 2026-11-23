@@ -13,6 +13,7 @@ use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\PaymentController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Vendor\OrderController;
 
 Route::get('/', function (Request $request) {
     $products = Product::with('category')
