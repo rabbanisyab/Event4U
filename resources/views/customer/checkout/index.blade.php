@@ -39,7 +39,11 @@
 
                             <div class="d-flex gap-3 py-3 border-bottom">
                                 <img
-                                    src="{{ $item->product->image ? asset('storage/'.$item->product->image) : 'https://placehold.co/100x100?text=Produk' }}"
+                                    src="{{ $item->product->image
+                                        ? (str_starts_with($item->product->image, 'http')
+                                            ? $item->product->image
+                                            : asset('storage/' . $item->product->image))
+                                        : 'https://placehold.co/100x100?text=Produk' }}"
                                     alt="{{ $item->product->name }}"
                                     style="width:85px;height:85px;object-fit:cover;border-radius:8px;"
                                 >

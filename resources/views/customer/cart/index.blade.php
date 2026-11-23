@@ -46,10 +46,14 @@
                             <div class="col-4 col-md-3">
                                 @if($item->product && $item->product->image)
                                     <img
-                                        src="{{ asset('storage/' . $item->product->image) }}"
-                                        class="img-fluid rounded-3"
-                                        style="width:100%;height:120px;object-fit:cover;"
-                                        alt="{{ $item->product->name }}">
+                                        src="{{ $item->product->image
+                                            ? (str_starts_with($item->product->image, 'http')
+                                                ? $item->product->image
+                                                : asset('storage/' . $item->product->image))
+                                            : 'https://placehold.co/100x100?text=Produk' }}"
+                                        alt="{{ $item->product->name }}"
+                                        style="width:85px;height:85px;object-fit:cover;border-radius:8px;"
+                                    >
                                 @else
                                     <div class="bg-light rounded-3 d-flex align-items-center justify-content-center"
                                          style="height:120px;">
