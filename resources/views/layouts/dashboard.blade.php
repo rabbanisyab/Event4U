@@ -27,9 +27,14 @@
 
         .sidebar {
             width: 260px;
-            min-height: 100vh;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
             background: var(--sidebar);
             color: white;
+            z-index: 1000;
         }
 
         .brand {
@@ -72,6 +77,7 @@
         .main-content {
             min-width: 0;
             flex: 1;
+            margin-left: 260px;
         }
 
         .topbar {
@@ -106,8 +112,14 @@
 
         @media (max-width: 991px) {
             .sidebar {
+                position: relative;
                 width: 100%;
+                height: auto;
                 min-height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
             }
 
             .content-area {
