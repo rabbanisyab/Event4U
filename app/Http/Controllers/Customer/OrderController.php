@@ -8,18 +8,29 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
+        $allowedStatuses = ['pending', 'confirmed', 'ongoing'];
+
+        $status = $request->query('status');
+
         $bookings = Booking::with([
             'details.product.category',
             'payment'
         ])
         ->where('user_id', Auth::id())
-        ->whereNotIn('status', ['completed', 'cancelled'])
+        ->whereIn('status', $allowedStatuses)
+        ->when(
+            in_array($status, $allowedStatuses),
+            function ($query) use ($status) {
+                $query->where('status', $status);
+            }
+        )
         ->latest()
-        ->paginate(10);
+        ->paginate(8)
+        ->withQueryString();
 
-        return view('customer.orders.index', compact('bookings'));
+        return view('customer.orders.index', compact('bookings', 'status'));
     }
 
     public function history()
