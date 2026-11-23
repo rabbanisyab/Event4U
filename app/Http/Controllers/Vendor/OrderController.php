@@ -12,39 +12,46 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
-    // PESANAN MASUK
     public function index()
     {
         $vendorId = Auth::id();
 
+        $selectedStatus = request()->query('status', 'all');
+
+        $allowedStatuses = ['all', 'pending', 'confirmed', 'ongoing'];
+
+        if (!in_array($selectedStatus, $allowedStatuses)) {
+            $selectedStatus = 'all';
+        }
+
+        $statuses = $selectedStatus === 'all'
+            ? ['pending', 'confirmed', 'ongoing']
+            : [$selectedStatus];
+
         $bookings = Booking::with([
             'user',
-            'details' => function ($query) use ($vendorId) {
-                $query->whereIn('vendor_status', [
-                    'pending',
-                    'confirmed',
-                    'ongoing'
-                ])
-                ->whereHas('product', function ($productQuery) use ($vendorId) {
-                    $productQuery->where('vendor_id', $vendorId);
-                })
-                ->with('product.category');
+            'details' => function ($query) use ($vendorId, $statuses) {
+                $query->whereIn('vendor_status', $statuses)
+                    ->whereHas('product', function ($productQuery) use ($vendorId) {
+                        $productQuery->where('vendor_id', $vendorId);
+                    })
+                    ->with('product.category');
             }
         ])
-        ->whereHas('details', function ($query) use ($vendorId) {
-            $query->whereIn('vendor_status', [
-                'pending',
-                'confirmed',
-                'ongoing'
-            ])
-            ->whereHas('product', function ($productQuery) use ($vendorId) {
-                $productQuery->where('vendor_id', $vendorId);
-            });
+        ->whereHas('details', function ($query) use ($vendorId, $statuses) {
+            $query->whereIn('vendor_status', $statuses)
+                ->whereHas('product', function ($productQuery) use ($vendorId) {
+                    $productQuery->where('vendor_id', $vendorId);
+                });
         })
         ->latest()
-        ->paginate(10);
+        ->paginate(10)
+        ->withQueryString();
 
-        return view('vendor.orders.index', compact('bookings'));
+        return view('vendor.orders.index', compact(
+            'bookings',
+            'selectedStatus'
+        ));
     }
 
     // RIWAYAT PESANAN

@@ -7,30 +7,23 @@
 <div class="container-fluid py-3">
 
     @php
-        $allDetails = $bookings->flatMap(fn($booking) => $booking->details);
-
-        $statusCounts = [
-            'pending' => $allDetails->where('vendor_status', 'pending')->count(),
-            'confirmed' => $allDetails->where('vendor_status', 'confirmed')->count(),
-            'ongoing' => $allDetails->where('vendor_status', 'ongoing')->count(),
-            'completed' => $allDetails->where('vendor_status', 'completed')->count(),
-            'rejected' => $allDetails->where('vendor_status', 'rejected')->count(),
-        ];
-
         $statusLabels = [
             'pending' => 'Menunggu Konfirmasi',
             'confirmed' => 'Dikonfirmasi',
             'ongoing' => 'Sedang Berjalan',
-            'completed' => 'Selesai',
-            'rejected' => 'Ditolak',
         ];
 
         $statusColors = [
             'pending' => 'warning',
             'confirmed' => 'primary',
             'ongoing' => 'info',
-            'completed' => 'success',
-            'rejected' => 'danger',
+        ];
+
+        $filters = [
+            'all' => 'Semua Pesanan',
+            'pending' => 'Menunggu',
+            'confirmed' => 'Dikonfirmasi',
+            'ongoing' => 'Berjalan',
         ];
     @endphp
 
@@ -45,7 +38,7 @@
 
         <div class="order-total-badge">
             <i class="bi bi-receipt me-2"></i>
-            {{ $bookings->count() }} Pesanan
+            {{ $bookings->total() }} Pesanan
         </div>
     </div>
 
@@ -113,6 +106,18 @@
                 Detail pesanan yang melibatkan produk kamu.
             </p>
         </div>
+    </div>
+
+    {{-- LOOP PESANAN --}}
+    @forelse($bookings as $booking)
+        {{-- Isi card pesanan kamu tetap di sini --}}
+    @empty
+        {{-- Tampilan jika belum ada pesanan --}}
+    @endforelse
+
+    {{-- PAGINATION --}}
+    <div class="mt-4">
+        {{ $bookings->links('pagination::bootstrap-5') }}
     </div>
 
     @forelse($bookings as $booking)
