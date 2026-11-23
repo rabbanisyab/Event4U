@@ -93,6 +93,12 @@ class PaymentController extends Controller
         $grossAmount = $request->gross_amount;
         $signatureKey = $request->signature_key;
 
+        \Log::info('MIDTRANS NOTIFICATION CHECK', [
+            'order_id' => $orderId,
+            'server_key_loaded' => !empty($serverKey),
+            'signature_received' => !empty($signatureKey),
+        ]);
+
         $expectedSignature = hash(
             'sha512',
             $orderId . $statusCode . $grossAmount . $serverKey
