@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\BookingDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -33,21 +34,49 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request, BookingDetail $bookingDetail)
     {
-        $request->validate([
+        $validated = $request->validate([
             'vendor_status' => 'required|in:confirmed,rejected,ongoing,completed',
         ]);
 
-        $bookingDetail->load('product');
+        DB::transaction(function () use ($bookingDetail, $validated) {
 
-        abort_unless(
-            $bookingDetail->product &&
-            (int) $bookingDetail->product->vendor_id === (int) Auth::id(),
-            403
-        );
+            $detail = BookingDetail::with('product')
+                ->lockForUpdate()
+                ->findOrFail($bookingDetail->id);
 
-        $bookingDetail->update([
-            'vendor_status' => $request->vendor_status,
-        ]);
+            abort_unless(
+                $detail->product &&
+                (int) $detail->product->vendor_id === (int) Auth::id(),
+                403
+            );
+
+            $oldStatus = $detail->vendor_status;
+            $newStatus = $validated['vendor_status'];
+
+            // Status selesai atau ditolak tidak boleh diproses ulang.
+            if (in_array($oldStatus, ['completed', 'rejected'])) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'vendor_status' => 'Pesanan ini sudah selesai diproses.',
+                ]);
+            }
+
+            $detail->vendor_status = $newStatus;
+
+            // Kembalikan stok ketika barang selesai disewa
+            // atau pesanan ditolak.
+            if (
+                in_array($newStatus, ['completed', 'rejected']) &&
+                !$detail->stock_restored_at
+            ) {
+                $product = $detail->product;
+
+                $product->increment('stock', $detail->quantity);
+
+                $detail->stock_restored_at = now();
+            }
+
+            $detail->save();
+        });
 
         return redirect()->route('vendor.orders.index')
             ->with('success', 'Status pesanan berhasil diperbarui.');
